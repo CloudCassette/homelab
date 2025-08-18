@@ -1,6 +1,9 @@
  terraform {
    required_providers {
-       required_version = ">= 1.0.0"
+       docker-compose = {
+           source  = "kreuzwerker/docker-compose"
+           version = "~> 0.22.3"
+       }
        docker = {
            source  = "kreuzwerker/docker"
            version = "~> 3.0.1"

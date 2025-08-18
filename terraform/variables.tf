@@ -1,7 +1,7 @@
 # Defining Variables
 variable "ghost_image" {
     description = "Image of Ghost"
-    default = "ghost:latest"
+    default = "ghost:alpine"
 }
 variable "ghost_container_name" {
     description = "Name of Ghost Container"

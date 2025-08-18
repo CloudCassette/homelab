@@ -1,6 +1,6 @@
 # Output the IP Address of the container
 output "ip" {
-    value = "${module.ghost.ip_address}"
+    value = "${module.ghost.ip}"
 }
 # Output the name of the container
 output "name" {
