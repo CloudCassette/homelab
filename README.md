@@ -7,8 +7,8 @@ This is where I keep all the configurations for my homelab.
 
 ### **Repository Strategy**
 - **🏠 This repo (homelab)**: Service configs (Docker Compose), encrypted backup jobs (restic + systemd), and operational scripts for the homelab server
-- **🎸 [orlandopunx-infrastructure](https://github.com/CloudCassette/orlandopunx-infrastructure)**: Ansible service configuration
-- **🔁 Mirrored to self-hosted Forgejo** at `http://192.168.86.4:3000/` (`ssh://git@192.168.86.4:2222`)
+- **🎸 [orlandopunx-infrastructure](http://192.168.86.4:3000/cloudcassette/orlandopunx-infrastructure)**: Ansible service configuration + Gancio event sync tooling (self-hosted on Forgejo; GitHub mirror at [github.com/CloudCassette/orlandopunx-infrastructure](https://github.com/CloudCassette/orlandopunx-infrastructure))
+- **🔁 All repos mirrored to self-hosted Forgejo** at `http://192.168.86.4:3000/` (`ssh://git@192.168.86.4:2222`)
 
 ### **Technology Stack**
 - **Docker Compose**: Container runtime with custom Steam Dock storage
