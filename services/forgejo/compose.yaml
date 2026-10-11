@@ -1,0 +1,24 @@
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:15.0.9
+    container_name: forgejo
+    restart: always
+    environment:
+      USER_UID: "1000"
+      USER_GID: "1000"
+      FORGEJO__database__DB_TYPE: sqlite3
+      FORGEJO__server__ROOT_URL: "http://192.168.86.4:3000/"
+      FORGEJO__server__DOMAIN: "192.168.86.4"
+      FORGEJO__server__SSH_DOMAIN: "192.168.86.4"
+      FORGEJO__server__SSH_PORT: "2222"
+      FORGEJO__security__INSTALL_LOCK: "true"
+      FORGEJO__service__DISABLE_REGISTRATION: "true"
+    ports:
+      - "192.168.86.4:3000:3000"
+      - "192.168.86.4:2222:22"
+    volumes:
+      - type: bind
+        source: /media/Steam Dock/forgejo
+        target: /data
+        bind:
+          create_host_path: false

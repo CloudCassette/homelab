@@ -60,3 +60,6 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Keep service secrets out
+.env

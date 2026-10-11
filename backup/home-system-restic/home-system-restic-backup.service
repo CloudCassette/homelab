@@ -1,0 +1,17 @@
+[Unit]
+Description=Encrypted home and system Restic backup
+RequiresMountsFor=/home/cloudcassette /etc /mnt/forgejo-backup
+After=local-fs.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+UMask=0077
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/local/sbin/home-system-restic-backup
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=4h
+TimeoutStopSec=10min

@@ -1,0 +1,18 @@
+services:
+  webdav:
+    image: hacdias/webdav:latest
+    container_name: webdav
+    restart: unless-stopped
+    volumes:
+      - ./config.yml:/config.yml:ro
+      - ./data:/data
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-dav
+    restart: unless-stopped
+    command: tunnel run --token ${CF_TUNNEL_TOKEN}
+    env_file:
+      - .env
+    depends_on:
+      - webdav

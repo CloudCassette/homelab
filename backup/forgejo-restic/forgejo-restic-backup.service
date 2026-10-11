@@ -1,0 +1,18 @@
+[Unit]
+Description=Offline Forgejo data backup using restic
+Requires=docker.service
+After=docker.service
+RequiresMountsFor="/media/Steam Dock" /mnt/forgejo-backup
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+UMask=0077
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/local/sbin/forgejo-restic-backup
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=75min
+TimeoutStopSec=10min

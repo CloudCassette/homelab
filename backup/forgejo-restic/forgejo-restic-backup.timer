@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily Forgejo restic backup at 05:30 local time
+
+[Timer]
+OnCalendar=*-*-* 05:30:00
+Persistent=true
+AccuracySec=1min
+Unit=forgejo-restic-backup.service
+
+[Install]
+WantedBy=timers.target
+Forgejo Restic backup staging (not installed or run)

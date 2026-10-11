@@ -6,35 +6,28 @@ This is where I keep all the configurations for my homelab.
 ## 🏗️ **Infrastructure Architecture**
 
 ### **Repository Strategy**
-- **🏠 This repo (homelab)**: Terraform infrastructure provisioning + homelab documentation
+- **🏠 This repo (homelab)**: Service configs (Docker Compose), encrypted backup jobs (restic + systemd), and operational scripts for the homelab server
 - **🎸 [orlandopunx-infrastructure](https://github.com/CloudCassette/orlandopunx-infrastructure)**: Ansible service configuration
-- **🔁 Mirrored to self-hosted Forgejo** at `http://192.168.86.4:3000/` (`git@192.168.86.4:2222`)
+- **🔁 Mirrored to self-hosted Forgejo** at `http://192.168.86.4:3000/` (`ssh://git@192.168.86.4:2222`)
 
 ### **Technology Stack**
-- **Terraform**: Infrastructure provisioning and base resource creation
-- **Ansible**: Service configuration and application deployment
-- **Docker**: Container runtime with custom Steam Dock storage
-- **Portainer**: Container management UI
-- **Cloudflare Tunnels**: Secure external access with SSL termination
+- **Docker Compose**: Container runtime with custom Steam Dock storage
 - **Forgejo**: Self-hosted Git hosting (Docker, pinned LTS)
 - **Restic**: Encrypted nightly backups to a dedicated 4 TB drive
+- **Cloudflare Tunnels**: Secure external access with SSL termination
+- **systemd**: Root-run backup services and timers
+- **Portainer**: Container management UI
 
 ## 🖥️ **Homelab Server (`cassette-lab`)**
 
-Single-server setup at `192.168.86.4` (LAN). Runs Fedora-style Linux with Docker Compose.
+Single-server setup at `192.168.86.4` (LAN). Runs Linux with Docker Compose. Previously provisioned with Terraform; the actual infrastructure is now Compose + systemd, so all configs live in this repo's `services/` and `backup/` directories (git history preserves the old `terraform/` module).
 
-### **Running Services**
-| Service | Port | Notes |
-|---|---|---|
-| Forgejo | `3000` (HTTP), `2222` (SSH) | Git hosting; LAN-only, install locked, registration disabled |
-| webdav | internal | Existing WebDAV service |
-| cloudflared-dav | internal | Cloudflare tunnel origin for `orlandopunx.com` |
-
-### **Forgejo**
-- Pinned image `codeberg.org/forgejo/forgejo:15.0.9` (LTS)
-- Compose file: `~/services/forgejo/compose.yaml`, persistent data at `/media/Steam Dock/forgejo` → `/data`
-- SQLite database, `restart: always`, `USER_UID/GID=1000`
-- Admin account: `cloudcassette` (created locally, never in chat)
+### **Running Services** (`services/`)
+| Service | Compose file | Ports | Notes |
+|---|---|---|---|
+| Forgejo | `services/forgejo/compose.yaml` | `3000` (HTTP), `2222` (SSH) | Git hosting; LAN-only, install locked, registration disabled, `restart: always` |
+| WebDAV | `services/webdav/docker-compose.yml` | internal | Files served via Cloudflare tunnel; needs local `.env` (see `.env.example`) |
+| cloudflared | `services/webdav/docker-compose.yml` | internal | Tunnel origin for `orlandopunx.com` |
 
 ### **Storage Layout**
 | Filesystem | Mount | Purpose |
@@ -42,63 +35,43 @@ Single-server setup at `192.168.86.4` (LAN). Runs Fedora-style Linux with Docker
 | `/dev/sdc1` (1.8 TB ext4) | `/media/Steam Dock` | Docker data + ROM collection (ext4 reserve lowered to 1%) |
 | `/dev/sdd1` (4 TB ext4) | `/mnt/forgejo-backup` | Encrypted backups + ROM archive copy (UUID `d5c4224f-c02a-4d03-8941-dae8ade4c9b6`, via fstab `nofail,nodev,nosuid,noexec`) |
 
-## 💾 **Backups (restic, encrypted, nightly)**
+## 💾 **Backups (restic, encrypted, nightly)** (`backup/`)
 
-Passphrases live in `/etc/*-backup/password` (root-only) **and** in the pass password manager off-host.
+Root-owned systemd units, installed from the staging files in this repo. Passphrases live in `/etc/*-backup/password` (root-only) **and** in the pass password manager off-host.
 
-| Job | Timer | Content | Repository |
-|---|---|---|---|
-| Forgejo | 05:30 daily | `/media/Steam Dock/forgejo` + compose.yaml (briefly stops Forgejo for consistency) | `/mnt/forgejo-backup/forgejo-restic` |
-| Home/system | 08:00 daily | `/home/cloudcassette` + `/etc` | `/mnt/forgejo-backup/home-system-restic` |
+| Job | Timer | Content | Repository | Files here |
+|---|---|---|---|---|
+| Forgejo | 05:30 daily | `/media/Steam Dock/forgejo` + compose.yaml (briefly stops Forgejo for consistency) | `/mnt/forgejo-backup/forgejo-restic` | `backup/forgejo-restic/` |
+| Home/system | 08:00 daily | `/home/cloudcassette` + `/etc` | `/mnt/forgejo-backup/home-system-restic` | `backup/home-system-restic/` |
 
-Installed as root-owned systemd units (`/usr/local/sbin/*-restic-backup`, service + timer). Both verified: `restic check --read-data` passed and isolated restore tests succeeded. The old 02:00 rsync home backup is **paused** (2026-10-11, low disk space on `/media/Steam Dock`); replace it with the restic job once verified history is reviewed.
+Both verified: `restic check --read-data` passed and isolated restore tests succeeded. The old 02:00 rsync home backup is **paused** (2026-10-11, low disk space on `/media/Steam Dock`); the 08:00 restic job replaces it.
+
+**Install** (see the README.md in each backup directory):
+```bash
+sudo install -o root -g root -m 0750 backup/forgejo-restic/backup.sh /usr/local/sbin/forgejo-restic-backup
+sudo install -o root -g root -m 0644 backup/forgejo-restic/forgejo-restic-backup.{service,timer} /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable --now forgejo-restic-backup.timer
+```
 
 ## 🕹️ **ROM Archive (`retro-roms-best-set`)**
 
 - ~514 GiB, 95 files, on `/media/Steam Dock/retro-roms-best-set`
 - Full copy on backup drive at `/mnt/forgejo-backup/cassette-lab-steam-dock-archive/retro-roms-best-set` (SHA-256 verification in progress)
 - Google Drive upload (`gdrive:Homelab Archive/retro-roms-best-set`): **paused** after repeated Wi-Fi outages; do not delete any local copy until the archive is verified and deletion is explicitly approved
+- Verification tool: `tools/rom-verify/verify-roms.py` — read-only SHA-256 identity check between the two trees
 
-## 📡 **Monitoring**
+## 📡 **Monitoring** (`scripts/`)
 
-- **Network diagnostics**: cron every minute logging Wi-Fi signal/router/external reachability to `~/network-diagnostics/sample.log` (server survived a Wi-Fi drop; root cause under investigation — Wi-Fi loses the router while the server itself keeps running)
-- **Desktop watcher** (`framework-pro`): user timer every 5 min, `systemd-notify`-style desktop alerts for ROM job and backup status — `~/.local/bin/forgejo-job-notify`
-
-## 📁 **Current Modules**
-
-### **Ghost Module** (`terraform/modules/ghost/`)
-- Base Ghost container configuration
-- Configurable ports and networking
-- Integration ready for Ansible configuration management
-
-## 🔗 **Service Integration**
-
-### **Terraform → Ansible Flow**
-1. **Terraform**: Provisions base infrastructure and Ghost containers
-2. **Ansible**: Configures services, nginx, domains, and application settings
-3. **Portainer**: Provides runtime management and monitoring
-
-### **Current Deployments**
-Managed by the orlandopunx-infrastructure Ansible configuration:
-- **cloudcassette.blog**: Personal blog (port 2368)
-- **orlandogirlsrockcamp.com**: Girls Rock Camp blog (port 2369) *ready for restoration*
-- **tamtamthesandwichman.com**: Sandwich Man blog (port 2370) *planned*
-- **godless-america.com**: Godless America blog (port 2371) *planned*
+- **Network diagnostics**: `scripts/network-diagnostics/sample.sh` on cron every minute — logs Wi-Fi signal/router/external reachability to `~/network-diagnostics/sample.log` (server survived a Wi-Fi drop; root cause under investigation — Wi-Fi loses the router while the server itself keeps running)
+- **Docker cleanup**: `scripts/docker-cleanup.sh` on cron weekly (Sundays 00:00) — prunes stopped containers, dangling images, networks, volumes
+- **Desktop watcher** (`framework-pro`, not in this repo): user timer every 5 min, desktop alerts for ROM job and backup status — `~/.local/bin/forgejo-job-notify`
 
 ## 🚀 **Usage**
 
-### **Infrastructure Provisioning**
+### **Service Deployment**
 ```bash
-cd terraform/
-terraform init
-terraform plan
-terraform apply
-```
-
-### **Service Configuration**
-```bash
-cd ../orlandopunx-infrastructure/ansible/
-ansible-playbook playbooks/site.yml --ask-vault-pass
+docker compose -f services/forgejo/compose.yaml up -d
+docker compose -f services/webdav/docker-compose.yml up -d   # needs .env
 ```
 
 ### **Git Hosting (Forgejo)**
@@ -110,8 +83,8 @@ git push forgejo main
 ## 🔧 **Development**
 
 ### **Adding New Services**
-1. Create Terraform module in this repo
-2. Create Ansible role in orlandopunx-infrastructure repo
-3. Deploy via Terraform → Ansible workflow
+1. Add a Compose file under `services/`
+2. Deploy on the server (copy to `~/services/`, `docker compose up -d`)
+3. Mirror the config here and push
 
-**Infrastructure provisioning and configuration management working together!** 🎸⚡
+**Infrastructure as code, punk edition.** 🎸⚡

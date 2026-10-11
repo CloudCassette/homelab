@@ -1,0 +1,3 @@
+[Unit]
+Description=Daily encrypted home and system Restic backup at 08:00
+
