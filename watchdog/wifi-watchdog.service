@@ -1,0 +1,9 @@
+[Unit]
+Description=Wi-Fi link watchdog (bounce link / restart wpa_supplicant / reboot)
+After=network-online.target wpa_supplicant.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/wifi-watchdog.sh
+TimeoutStartSec=120
