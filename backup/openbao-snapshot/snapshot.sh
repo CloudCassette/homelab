@@ -19,7 +19,10 @@ readonly IN_CONTAINER=/openbao/data/snapshot.tmp.json
 docker image inspect openbao/openbao:2.7.2 >/dev/null 2>&1 || { echo "openbao image missing; skipping"; exit 0; }
 
 # On-source snapshot (sealed), then pull it out to the backup mount.
-if ! docker exec "$CNAME" bao operator raft snapshot save "$IN_CONTAINER" >/dev/null; then
+# The in-container client must point at the LAN address + our CA (defaults to
+# 127.0.0.1:8200 and fails the TLS check).
+if ! docker exec -e BAO_ADDR=https://192.168.86.4:8200 -e BAO_CACERT=/openbao/tls/ca.pem \
+     "$CNAME" bao operator raft snapshot save "$IN_CONTAINER" >/dev/null; then
   echo "raft snapshot save failed"
   exit 1
 fi
