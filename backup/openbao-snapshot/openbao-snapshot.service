@@ -1,0 +1,18 @@
+[Unit]
+Description=Snapshot OpenBao raft storage to the backup drive
+Requires=docker.service
+After=docker.service
+RequiresMountsFor=/mnt/forgejo-backup
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+UMask=0077
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/local/sbin/openbao-snapshot
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=5min
+TimeoutStopSec=30s

@@ -1,0 +1,30 @@
+services:
+  openbao:
+    image: openbao/openbao:2.7.2
+    container_name: openbao
+    restart: unless-stopped
+    command: ["server", "-config=/openbao/config/openbao.hcl"]
+    # LAN-only: bind only to the homelab's LAN address on the host; the
+    # container itself listens on 0.0.0.0 (bridge networking).
+    ports:
+      - "192.168.86.4:8200:8200"
+    volumes:
+      # Config: read-only, owned by root on the host.
+      - ./config/openbao.hcl:/openbao/config/openbao.hcl:ro
+      # Raft data + snapshot space. Pre-created + chowned to the container
+      # uid on deploy (see README) — a named volume would start root-owned
+      # and the non-root openbao user couldn't write it.
+      - /media/Steam Dock/openbao/data:/openbao/data
+      # Generated on deploy: TLS cert/key + auto-unseal key. 0600, host-side.
+      - /etc/openbao/tls:/openbao/tls:ro
+      - /etc/openbao/secrets:/openbao/secrets
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "bao", "status", "-format=json"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

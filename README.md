@@ -27,6 +27,7 @@ Single-server setup at `192.168.86.4` (LAN). Runs Linux with Docker Compose. Pre
 |---|---|---|---|
 | Forgejo | `services/forgejo/compose.yaml` | `3000` (HTTP), `2222` (SSH) | Git hosting; LAN-only, install locked, registration disabled, `restart: always` |
 | WebDAV | `services/webdav/docker-compose.yml` | internal | Files served via Cloudflare tunnel; needs local `.env` (see `.env.example`) |
+| OpenBao | `services/openbao/docker-compose.yml` | `192.168.86.4:8200` (HTTPS) | LAN-only secrets store; auto-unseal via static key (`/etc/openbao/secrets/unseal.key`), raft storage, daily sealed snapshots |
 | cloudflared | `services/webdav/docker-compose.yml` | internal | Tunnel origin for `orlandopunx.com` |
 
 ### **Storage Layout**
@@ -42,6 +43,7 @@ Root-owned systemd units, installed from the staging files in this repo. Passphr
 | Job | Timer | Content | Repository | Files here |
 |---|---|---|---|---|
 | Forgejo | 05:30 daily | `/media/Steam Dock/forgejo` + compose.yaml (briefly stops Forgejo for consistency) | `/mnt/forgejo-backup/forgejo-restic` | `backup/forgejo-restic/` |
+| OpenBao | 06:15 daily | sealed raft snapshot (last 7) | `/mnt/forgejo-backup/openbao-snapshots` | `backup/openbao-snapshot/` |
 | Home/system | 08:00 daily | `/home/cloudcassette` + `/etc` | `/mnt/forgejo-backup/home-system-restic` | `backup/home-system-restic/` |
 
 Both verified: `restic check --read-data` passed and isolated restore tests succeeded. The old 02:00 rsync home backup is **paused** (2026-10-11, low disk space on `/media/Steam Dock`); the 08:00 restic job replaces it.

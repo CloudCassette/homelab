@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily OpenBao raft snapshot
+
+[Timer]
+# 06:15 local — clear of the Forgejo (05:30) and home/system (08:00) backups.
+OnCalendar=*-*-* 06:15:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
