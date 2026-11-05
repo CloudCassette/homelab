@@ -19,6 +19,12 @@ was purely a network-layer problem). Last good sample: `external=up`
 This unit restores the route automatically and logs transitions via
 `systemd-cat -t network-ensure` (journal).
 
+Complements `watchdog/wifi-watchdog` (also in this repo): that one handles a
+genuinely dead Wi-Fi link (gateway + neighbor + WAN all unreachable), where
+bouncing the link/`wpa_supplicant` is the fix. `network-ensure` handles the
+opposite case that actually bit us — link healthy, gateway reachable, but no
+default route — with a minimal one-line route add and no higher escalation.
+
 ## Behavior
 
 - Runs as root as a oneshot via `network-ensure.timer`: ~1 min after boot, then
