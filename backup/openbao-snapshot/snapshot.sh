@@ -17,7 +17,9 @@ umask 077
 readonly SNAP_DIR=/mnt/forgejo-backup/openbao-snapshots
 readonly KEEP=7
 readonly CNAME=openbao
-readonly TOKEN_FILE=/etc/openbao/snapshot.token
+# Scoped snapshot token — user-owned 0600 (no sudo needed to write it on
+# deploy; the root-run service reads it regardless of ownership).
+readonly TOKEN_FILE=/home/cloudcassette/.config/openbao/snapshot.token
 readonly IN_CONTAINER=/openbao/data/snapshot.tmp.json
 
 docker image inspect openbao/openbao:2.7.2 >/dev/null 2>&1 || { echo "openbao image missing; skipping"; exit 0; }
