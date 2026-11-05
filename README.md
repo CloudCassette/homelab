@@ -62,7 +62,8 @@ sudo systemctl daemon-reload && sudo systemctl enable --now forgejo-restic-backu
 
 ## 📡 **Monitoring** (`scripts/`)
 
-- **Network diagnostics**: `scripts/network-diagnostics/sample.sh` on cron every minute — logs Wi-Fi signal/router/external reachability to `~/network-diagnostics/sample.log` (server survived a Wi-Fi drop; root cause under investigation — Wi-Fi loses the router while the server itself keeps running)
+- **Network diagnostics**: `scripts/network-diagnostics/sample.sh` on cron every minute — logs Wi-Fi signal/router/external reachability to `~/network-diagnostics/sample.log`
+- **Network self-heal**: `scripts/network-ensure/` (root systemd unit + 1-min timer) — restores the default route when the WiFi carrier event leaves the box reachable on LAN but with no route to the internet (see its README for the 2026-11-04 incident where the cloudflared tunnel crash-looped ~10 h because of exactly this)
 - **Docker cleanup**: `scripts/docker-cleanup.sh` on cron weekly (Sundays 00:00) — prunes stopped containers, dangling images, networks, volumes
 - **Desktop watcher** (`framework-pro`, not in this repo): user timer every 5 min, desktop alerts for ROM job and backup status — `~/.local/bin/forgejo-job-notify`
 
