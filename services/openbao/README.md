@@ -135,17 +135,25 @@ cat >> ~/.bashrc <<'EOF'
 export BAO_ADDR=https://192.168.86.4:8200
 export BAO_CACERT=$HOME/.config/openbao/ca.pem
 EOF
-bao login -method=userpass -username=jordan
+bao login -method=userpass username=jordan
 ```
 
 **Backup unit (root, on cassette-lab):**
 
 ```sh
-sudo install -o root -g root -m 0750 backup/openbao-snapshot/snapshot.sh /usr/local/sbin/openbao-snapshot
-sudo install -o root -g root -m 0644 backup/openbao-snapshot/openbao-snapshot.{service,timer} /etc/systemd/system/
+sudo install -o root -g root -m 0750 snapshot.sh /usr/local/sbin/openbao-snapshot
+sudo install -o root -g root -m 0644 openbao-snapshot.{service,timer} /etc/systemd/system/
 sudo systemctl daemon-reload
+
+# One-time: scoped snapshot token (read-only on the raft snapshot endpoint),
+# stored 0600 in the user's home; the root-run script reads it via
+# /home/cloudcassette/.config/openbao/snapshot.token and self-renews it.
+# (Run with the bootstrap token in BAO_TOKEN on the laptop, then:)
+#   cat /tmp/openbao-snapshot.token | ssh homelab \
+#     'mkdir -p ~/.config/openbao && cat > ~/.config/openbao/snapshot.token && chmod 600 ~/.config/openbao/snapshot.token'
+
 sudo systemctl start openbao-snapshot.service     # first run while watching: journalctl -fu openbao-snapshot.service
-ls -l /mnt/forgejo-backup/openbao-snapshots
+sudo ls -l /mnt/forgejo-backup/openbao-snapshots  # dir is root-only; list with sudo
 sudo systemctl enable --now openbao-snapshot.timer
 ```
 
