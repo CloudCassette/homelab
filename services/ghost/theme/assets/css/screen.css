@@ -488,13 +488,13 @@ button:focus-visible,
 }
 .cassette-label {
     position: absolute;
-    inset-inline-start: 48%;
+    inset-inline-start: calc(48% - 1px);
     inset-block-end: 58%;
-    width: min(44%, 23rem);
+    width: min(calc(44% - 2px), calc(23rem - 2px));
     padding: clamp(.125rem, .5vw, .375rem);
-    border: 1px solid #d8d2c2;
+    border: 1px solid #d4c9af;
     color: var(--ink);
-    background: #ffffff;
+    background: var(--paper-label);
     transform: translateX(-50%);
 }
 .cassette-label-topline {
