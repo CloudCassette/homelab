@@ -502,7 +502,7 @@ button:focus-visible,
     position: absolute;
     z-index: 1;
     inset-inline-start: var(--space-3);
-    inset-block-end: var(--space-2);
+    inset-block-start: var(--space-2);
     padding: var(--space-1) var(--space-2);
     border: 1px solid rgba(243, 234, 214, .55);
     color: var(--paper-raised);
@@ -511,6 +511,17 @@ button:focus-visible,
     font-size: .6875rem;
     font-weight: 700;
     letter-spacing: .08em;
+}
+.tape-card-title-label {
+    position: absolute;
+    z-index: 2;
+    inset-inline: 9%;
+    inset-block-end: 10%;
+    padding: .25rem .375rem;
+    border: 1px solid #d4c9af;
+    color: var(--ink);
+    background: linear-gradient(115deg, var(--paper-raised), var(--paper-label));
+    box-shadow: 0 2px 5px rgba(17, 17, 15, .2);
 }
 .tape-card-label {
     display: flex;
@@ -534,7 +545,7 @@ button:focus-visible,
 .tape-title {
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    font-size: clamp(.8rem, 1.5vw, 1rem);
     font-weight: 800;
     letter-spacing: -.04em;
     line-height: 1.1;
@@ -922,7 +933,9 @@ button:focus-visible,
     .tape-stack-item,
     .tape-stack-item:nth-child(n) { transform: none; }
     .tape-stack-item + .tape-stack-item { margin-block-start: var(--space-5); }
-    .tape-card-label { padding-inline: var(--space-3); }
+    .tape-card-art img { object-fit: contain; background: #fff; }
+    .tape-card-title-label { inset-inline: 16%; inset-block-end: 8%; }
+    .tape-card-label { width: min(84%, 100%); margin-inline: auto; padding-inline: var(--space-3); border: 1px solid #d4c9af; }
     .tape-mechanism span { width: 1.9rem; }
     .post-page,
     .page-article { max-width: 100%; }

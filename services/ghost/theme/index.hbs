@@ -19,17 +19,19 @@
             {{#foreach posts}}
                 <li class="tape-stack-item">
                     <article class="tape-card">
-                        <div class="tape-card-art" aria-hidden="true">
+                        <div class="tape-card-art">
                             {{#if feature_image}}
                                 <img src="{{feature_image}}" alt="" loading="lazy">
                             {{else}}
                                 <img src="{{asset "img/cassette.jpg"}}" alt="" loading="lazy">
                             {{/if}}
-                            <span class="tape-art-index">TRACK {{@number}}</span>
+                            <span class="tape-art-index" aria-hidden="true">TRACK {{@number}}</span>
+                            <div class="tape-card-title-label">
+                                <h3 class="tape-title"><a href="{{url}}">{{title}}</a></h3>
+                            </div>
                         </div>
                         <div class="tape-card-label">
                             <p class="tape-label-kicker">PERSONAL ARCHIVE <span>•</span> SIDE A</p>
-                            <h3 class="tape-title"><a href="{{url}}">{{title}}</a></h3>
                             {{#if excerpt}}<p class="tape-excerpt">{{excerpt words="28"}}</p>{{/if}}
                             <div class="tape-card-meta">
                                 <time datetime="{{date format="YYYY-MM-DD"}}">{{date format="DD MMM YYYY"}}</time>
