@@ -477,13 +477,14 @@ button:focus-visible,
     position: relative;
     margin: 0;
     overflow: hidden;
-    background: var(--shell);
+    background: var(--paper);
 }
 .cassette-hero-image {
     width: 100%;
     aspect-ratio: 3 / 2;
     max-height: 38rem;
     object-fit: cover;
+    mix-blend-mode: multiply;
 }
 .cassette-label {
     position: absolute;
