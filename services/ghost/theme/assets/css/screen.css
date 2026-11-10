@@ -491,9 +491,9 @@ button:focus-visible,
     inset-block-end: 58%;
     width: min(44%, 23rem);
     padding: clamp(.125rem, .5vw, .375rem);
-    border: 1px solid #d4c9af;
+    border: 1px solid #d8d2c2;
     color: var(--ink);
-    background: var(--paper-label);
+    background: #ffffff;
     transform: translateX(-50%);
 }
 .cassette-label-topline {
