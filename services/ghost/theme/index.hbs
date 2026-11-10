@@ -15,32 +15,32 @@
     </div>
 
     {{#if posts}}
-        <ol class="track-list">
+        <ol class="tape-stack">
             {{#foreach posts}}
-                <li class="track-item">
-                    <article class="track-row">
-                        <span class="track-number" aria-hidden="true">{{@number}}</span>
-                        <div class="track-copy">
-                            <time class="track-date" datetime="{{date format="YYYY-MM-DD"}}">{{date format="DD MMM YYYY"}}</time>
-                            <h3 class="track-title"><a href="{{url}}">{{title}}</a></h3>
-                            {{#if excerpt}}<p class="track-excerpt">{{excerpt words="30"}}</p>{{/if}}
+                <li class="tape-stack-item">
+                    <article class="tape-card">
+                        <div class="tape-card-art" aria-hidden="true">
+                            {{#if feature_image}}
+                                <img src="{{feature_image}}" alt="" loading="lazy">
+                            {{else}}
+                                <img src="{{asset "img/cassette.jpg"}}" alt="" loading="lazy">
+                            {{/if}}
+                            <span class="tape-art-index">TRACK {{@number}}</span>
+                        </div>
+                        <div class="tape-card-label">
+                            <p class="tape-label-kicker">PERSONAL ARCHIVE <span>•</span> SIDE A</p>
+                            <h3 class="tape-title"><a href="{{url}}">{{title}}</a></h3>
+                            {{#if excerpt}}<p class="tape-excerpt">{{excerpt words="28"}}</p>{{/if}}
+                            <div class="tape-card-meta">
+                                <time datetime="{{date format="YYYY-MM-DD"}}">{{date format="DD MMM YYYY"}}</time>
+                            </div>
                             {{#if tags}}
-                                <ul class="tag-list" aria-label="Post tags">
-                                    {{#foreach tags}}<li><a class="tag-chip" href="{{url}}">{{name}}</a></li>{{/foreach}}
+                                <ul class="tape-tag-list" aria-label="Post tags">
+                                    {{#foreach tags}}<li><a href="{{url}}">{{name}}</a></li>{{/foreach}}
                                 </ul>
                             {{/if}}
                         </div>
-                        {{#if feature_image}}
-                            <figure class="track-art"><img src="{{feature_image}}" alt="" loading="lazy"></figure>
-                        {{else}}
-                            <div class="track-art track-art--label" aria-hidden="true">
-                                <img src="{{asset "img/cassette.jpg"}}" alt="" loading="lazy">
-                                <span class="track-art-overprint">
-                                    <span class="track-art-chip">TRACK</span>
-                                    <span class="track-art-number">{{@number}}</span>
-                                </span>
-                            </div>
-                        {{/if}}
+                        <div class="tape-mechanism" aria-hidden="true"><span></span><span></span></div>
                     </article>
                 </li>
             {{/foreach}}
