@@ -8,10 +8,20 @@ services:
       - ./data:/data
 
   cloudflared:
-    image: cloudflare/cloudflared:latest
+    image: cloudflare/cloudflared:2026.10.7
     container_name: cloudflared-dav
     restart: unless-stopped
-    command: tunnel run --token ${CF_TUNNEL_TOKEN}
+    command: tunnel --no-autoupdate run --token ${CF_TUNNEL_TOKEN}
+    env_file:
+      - .env
+    depends_on:
+      - webdav
+
+  cloudflared-git:
+    image: cloudflare/cloudflared:2026.10.7
+    container_name: cloudflared-git
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CF_TUNNEL_TOKEN_GIT}
     env_file:
       - .env
     depends_on:

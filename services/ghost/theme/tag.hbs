@@ -1,0 +1,46 @@
+{{!< default}}
+{{#tag}}
+<section class="archive-intro tag-intro" aria-labelledby="page-title">
+    <p class="eyebrow"><span class="record-dot" aria-hidden="true"></span> FILED UNDER</p>
+    <h1 id="page-title" class="heading-display">{{name}}<span class="period">.</span></h1>
+    {{#if description}}<p class="archive-lede">{{description}}</p>{{else}}<p class="archive-lede">Tracks with this label, gathered in one place.</p>{{/if}}
+</section>
+{{/tag}}
+
+<section class="tracklist-section" aria-labelledby="tracklist-title">
+    <div class="section-heading">
+        <div><p class="eyebrow">TAG ARCHIVE</p><h2 id="tracklist-title" class="heading-section">Tracklist</h2></div>
+        <span class="side-index" aria-hidden="true">SIDE&nbsp;A <span>///</span></span>
+    </div>
+    {{#if posts}}
+        <ol class="track-list">
+            {{#foreach posts}}
+                <li class="track-item">
+                    <article class="track-row">
+                        <span class="track-number" aria-hidden="true">{{@number}}</span>
+                        <div class="track-copy">
+                            <time class="track-date" datetime="{{date format="YYYY-MM-DD"}}">{{date format="DD MMM YYYY"}}</time>
+                            <h3 class="track-title"><a href="{{url}}">{{title}}</a></h3>
+                            {{#if excerpt}}<p class="track-excerpt">{{excerpt words="30"}}</p>{{/if}}
+                        </div>
+                        {{#if feature_image}}
+                            <figure class="track-art"><img src="{{feature_image}}" alt="" loading="lazy"></figure>
+                        {{else}}
+                            <div class="track-art track-art--label" aria-hidden="true">
+                                <svg viewBox="0 0 88 72" focusable="false">
+                                    <rect x="5" y="7" width="78" height="58" rx="4"></rect>
+                                    <circle cx="24" cy="37" r="7"></circle><circle cx="64" cy="37" r="7"></circle>
+                                    <path d="M16 18h56M25 50h38M31 50l5-10h16l5 10"></path>
+                                    <circle class="label-dot" cx="24" cy="37" r="2"></circle><circle class="label-dot" cx="64" cy="37" r="2"></circle>
+                                </svg>
+                            </div>
+                        {{/if}}
+                    </article>
+                </li>
+            {{/foreach}}
+        </ol>
+    {{else}}
+        <div class="empty-state"><h3>No tracks under this label yet.</h3><p>Try another tag from the archive.</p></div>
+    {{/if}}
+</section>
+{{pagination}}

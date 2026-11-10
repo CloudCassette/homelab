@@ -1,0 +1,62 @@
+{{!< default}}
+<section class="archive-intro" aria-labelledby="page-title">
+    <p class="eyebrow"><span class="record-dot" aria-hidden="true"></span> PERSONAL ARCHIVE</p>
+    <h1 id="page-title" class="heading-display">The stack<span class="period">.</span></h1>
+    <p class="archive-lede">Songs, shows, and the stories that stick around after the last chord.</p>
+</section>
+
+<section class="tracklist-section" aria-labelledby="tracklist-title">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">RECENT ROTATION</p>
+            <h2 id="tracklist-title" class="heading-section">Side A</h2>
+        </div>
+        <span class="side-index" aria-hidden="true">SIDE&nbsp;A <span>///</span></span>
+    </div>
+
+    {{#if posts}}
+        <ol class="track-list">
+            {{#foreach posts}}
+                <li class="track-item">
+                    <article class="track-row">
+                        <span class="track-number" aria-hidden="true">{{@number}}</span>
+                        <div class="track-copy">
+                            <time class="track-date" datetime="{{date format="YYYY-MM-DD"}}">{{date format="DD MMM YYYY"}}</time>
+                            <h3 class="track-title"><a href="{{url}}">{{title}}</a></h3>
+                            {{#if excerpt}}<p class="track-excerpt">{{excerpt words="30"}}</p>{{/if}}
+                            {{#if tags}}
+                                <ul class="tag-list" aria-label="Post tags">
+                                    {{#foreach tags}}<li><a class="tag-chip" href="{{url}}">{{name}}</a></li>{{/foreach}}
+                                </ul>
+                            {{/if}}
+                        </div>
+                        {{#if feature_image}}
+                            <figure class="track-art"><img src="{{feature_image}}" alt="" loading="lazy"></figure>
+                        {{else}}
+                            <div class="track-art track-art--label" aria-hidden="true">
+                                <img src="{{asset "img/cassette.jpg"}}" alt="" loading="lazy">
+                                <span class="track-art-overprint">
+                                    <span class="track-art-chip">TRACK</span>
+                                    <span class="track-art-number">{{@number}}</span>
+                                </span>
+                            </div>
+                        {{/if}}
+                    </article>
+                </li>
+            {{/foreach}}
+        </ol>
+    {{else}}
+        <div class="empty-state">
+            <svg class="empty-cassette" viewBox="0 0 112 72" aria-hidden="true" focusable="false">
+                <rect x="3" y="3" width="106" height="66" rx="6"></rect>
+                <rect class="empty-label" x="13" y="12" width="86" height="33" rx="2"></rect>
+                <circle cx="34" cy="29" r="8"></circle><circle cx="78" cy="29" r="8"></circle>
+                <path d="M42 29h28M35 54h42"></path>
+            </svg>
+            <h3>The first side is still blank.</h3>
+            <p>New notes will land here when the next track is ready.</p>
+        </div>
+    {{/if}}
+</section>
+
+{{pagination}}

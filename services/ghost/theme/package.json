@@ -1,0 +1,19 @@
+{
+  "name": "tape-deck-v2",
+  "version": "1.0.0",
+  "description": "A quiet, editorial cassette-inspired Ghost theme for cloudcassette.blog",
+  "keywords": [
+    "ghost-theme",
+    "cassette",
+    "editorial"
+  ],
+  "author": {
+    "email": "cloudcassette@jordanduttinger.com"
+  },
+  "engines": {
+    "ghost": ">=5.0.0"
+  },
+  "config": {
+    "posts_per_page": 6
+  }
+}

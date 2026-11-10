@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="{{@site.locale}}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>{{meta_title}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset "css/screen.css"}}">
+    {{ghost_head}}
+</head>
+<body class="{{body_class}}">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <div class="site-frame">
+        <header class="site-header">
+            <div class="tape-shell">
+                <span class="shell-screw screw--tl" aria-hidden="true"></span>
+                <span class="shell-screw screw--tr" aria-hidden="true"></span>
+                <span class="shell-screw screw--bl" aria-hidden="true"></span>
+                <span class="shell-screw screw--br" aria-hidden="true"></span>
+                <div class="tape-label">
+                    <a class="brand" href="{{@site.url}}" aria-label="{{@site.title}} home">
+                        <span class="brand-overline">A PERSONAL MUSIC JOURNAL</span>
+                        <span class="brand-name">{{@site.title}}</span>
+                    </a>
+                    <svg class="tape-reels" viewBox="0 0 112 56" aria-hidden="true" focusable="false">
+                        <g class="reel-spin">
+                            <circle class="reel-edge" cx="23" cy="28" r="18"></circle>
+                            <circle class="reel-center" cx="23" cy="28" r="5"></circle>
+                            <path class="reel-spokes" d="M23 12v10m0 12v10M7 28h10m12 0h10M11.7 16.7l7.1 7.1m8.5 8.5 7.1 7.1m0-22.7-7.1 7.1m-8.5 8.5-7.1 7.1"></path>
+                        </g>
+                        <g class="reel-spin">
+                            <circle class="reel-edge" cx="89" cy="28" r="18"></circle>
+                            <circle class="reel-center" cx="89" cy="28" r="5"></circle>
+                            <path class="reel-spokes" d="M89 12v10m0 12v10M73 28h10m12 0h10M77.7 16.7l7.1 7.1m8.5 8.5 7.1 7.1m0-22.7-7.1 7.1m-8.5 8.5-7.1 7.1"></path>
+                        </g>
+                        <path class="tape-path" d="M41 28h30"></path>
+                    </svg>
+                    <div class="label-baseline"><span>SIDE A</span><span>CHROME / 90 MIN</span></div>
+                </div>
+                <div class="shell-window" aria-hidden="true"><span></span><span></span><span></span></div>
+            </div>
+            <nav class="primary-navigation" aria-label="Main navigation">{{navigation}}</nav>
+        </header>
+
+        <main id="main-content" class="site-main">
+            {{{body}}}
+        </main>
+
+        <footer class="site-footer">
+            <div class="j-card">
+                <div class="footer-topline">
+                    <span class="footer-label">J-CARD / BACK</span>
+                    <span class="footer-index" aria-hidden="true">CC&nbsp;—&nbsp;01</span>
+                </div>
+                <div class="footer-layout">
+                    <section class="footer-about" aria-labelledby="footer-about-title">
+                        <h2 id="footer-about-title">The notes between tracks.</h2>
+                        {{#if @site.description}}
+                            <p>{{@site.description}}</p>
+                        {{else}}
+                            <p>Personal notes on punk, records, and the people who make the noise.</p>
+                        {{/if}}
+                    </section>
+                    <section class="footer-navigation" aria-labelledby="footer-nav-title">
+                        <h2 id="footer-nav-title">On the tape</h2>
+                        <nav aria-label="Footer navigation">{{navigation}}</nav>
+                    </section>
+                </div>
+                <div class="footer-colophon"><span>RECORDED WITH CARE, PLAYED TOO LOUD</span><span>© {{@site.title}}</span></div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{asset "js/main.js"}}" defer></script>
+    {{ghost_foot}}
+</body>
+</html>

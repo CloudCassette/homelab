@@ -1,0 +1,16 @@
+{{!< default}}
+<section class="error-page" aria-labelledby="page-title">
+    <svg class="error-cassette" viewBox="0 0 160 104" role="img" aria-labelledby="cassette-title cassette-description">
+        <title id="cassette-title">A cassette with no track loaded</title>
+        <desc id="cassette-description">The empty tape represents a missing page.</desc>
+        <rect x="3" y="3" width="154" height="98" rx="8"></rect>
+        <rect class="error-label" x="18" y="17" width="124" height="47" rx="3"></rect>
+        <circle cx="48" cy="40" r="13"></circle><circle cx="112" cy="40" r="13"></circle>
+        <path d="M61 40h38M43 78h74"></path>
+        <path class="error-mark" d="m73 27 14 24m0-24L73 51"></path>
+    </svg>
+    <p class="eyebrow"><span class="record-dot" aria-hidden="true"></span> SIGNAL LOST <span class="eyebrow-divider">/</span> 404</p>
+    <h1 id="page-title" class="heading-display">SIDE NOT FOUND<span class="period">.</span></h1>
+    <p class="error-copy">This track isn’t on the tape. It may have moved, or the label may be off.</p>
+    <a class="return-link" href="{{@site.url}}">Back to the tracklist <span aria-hidden="true">↗</span></a>
+</section>
